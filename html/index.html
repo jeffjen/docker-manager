@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Swarm Manager Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+    font-family: monospace;
+    background: #BFBDBD;
+}
+a {
+    text-decoration: none;
+}
+.container {
+    margin: 0 auto;
+    width: 30%;
+    text-align: center;
+    background: #EAEEEF;
+    padding-bottom: 10px;
+}
+.container > .title {
+    padding-top: 10px;
+    margin: 75px 0 15px 0;
+    border-top: 5px solid #4D5C82;
+}
+.title > h1 {
+    margin-bottom: 5px;
+    font-size: 2.5em;
+}
+.title > span {
+    font-size: 1.25em;
+}
+.action > h4 {
+    margin: 10px 0;
+    font-family: sans-serif;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="title">
+        <h1>{Swarm Manager}</h1>
+        <span>await your command</span>
+    </div>
+    <div class="action">
+        <h4><a href="#expect">I have an Expectation</a></h4>
+        <h4><a href="#cluster">I want a cluster</a></h4>
+    </div>
+    <div class="service-list"></div>
+</div>
+</body>
+</html>
