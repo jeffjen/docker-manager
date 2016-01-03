@@ -11,8 +11,13 @@ import (
 
 func init() {
 	server := api.GetServeMux()
-	server.Handle("/", http.FileServer(http.Dir("html/")))
+
 	server.HandleFunc("/info", dsc.Info)
+
+	server.Handle("/", http.FileServer(http.Dir("html/")))
+
+	server.HandleFunc("/cluster/list", api.ClusterList)
+	server.HandleFunc("/cluster", api.ClusterCreate)
 }
 
 func RunAPIEndpoint(addr string) {
