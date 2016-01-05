@@ -14,6 +14,7 @@ func init() {
 
 	server.HandleFunc("/info", dsc.Info)
 
+	server.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("html/bower_components/"))))
 	server.Handle("/", http.FileServer(http.Dir("html/")))
 
 	server.HandleFunc("/cluster/list", api.ClusterList)

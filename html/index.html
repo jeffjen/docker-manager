@@ -8,9 +8,6 @@ body {
     font-family: monospace;
     background: #BFBDBD;
 }
-a {
-    text-decoration: none;
-}
 .container {
     margin: 0 auto;
     width: 30%;
@@ -23,18 +20,17 @@ a {
     margin: 75px 0 15px 0;
     border-top: 5px solid #4D5C82;
 }
-.title > h1 {
+.container > .title h1 {
     margin-bottom: 5px;
     font-size: 2.5em;
 }
-.title > span {
+.container > .title span {
     font-size: 1.25em;
 }
-.action > h4 {
-    margin: 10px 0;
-    font-family: sans-serif;
-}
 </style>
+<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<link rel="import" href="service-topic.html">
+<link rel="import" href="cluster-topic.html">
 </head>
 <body>
 <div class="container">
@@ -42,14 +38,12 @@ a {
         <h1>{Swarm Manager}</h1>
         <span>await your command</span>
     </div>
-    <div class="action">
+    <service-topic>
         <h4><a href="#expect">I have an Expectation</a></h4>
-        <div class="service-list"></div>
-    </div>
-    <div class="action">
+    </service-topic>
+    <cluster-topic>
         <h4><a href="#cluster">I want a cluster</a></h4>
-        <div class="service-list"></div>
-    </div>
+    </cluster-topic>
 </div>
 </body>
 </html>

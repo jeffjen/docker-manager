@@ -1,0 +1,23 @@
+{
+  "name": "docker-manager",
+  "homepage": "https://github.com/jeffjen/docker-manager",
+  "authors": [
+    "Jeffrey Jen <yihungjen@gmail.com>"
+  ],
+  "description": "docker-manager frontend for service and cluster management",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0",
+    "iron-ajax": "PolymerElements/iron-ajax#~1.1.1"
+  }
+}
