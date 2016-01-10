@@ -17,12 +17,19 @@
 .topic-wrapper > ::content a {
     text-decoration: none;
 }
+.list-wrapper {
+    padding: 5px 10px;
+}
+.list-wrapper a {
+    font-size: 14px;
+    margin: 2px;
+}
 </style>
 <iron-ajax auto url="/cluster/list" handle-as="json" on-response="listClusters"></iron-ajax>
 <div class="topic-wrapper">
     <div class="list-wrapper">
         <template is="dom-repeat" items="{{clusters}}">
-        <div><a href="/cluster/{{item}}">{{item}}</a></div>
+        <a href="/cluster/{{item}}">{{item}}</a>
         </template>
     </div>
     <content></content>
@@ -31,8 +38,14 @@
 <script>
 Polymer({
     is: "cluster-topic",
+    ready: function() {
+        this.clusters = [];
+    },
     listClusters: function(e) {
-        debugger;
+        var clusters = e.detail.response;
+        for (var idx = 0; idx < clusters.Size; idx++) {
+            this.push("clusters", clusters.Nodes[idx]);
+        }
     }
 });
 </script>
