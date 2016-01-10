@@ -10,15 +10,24 @@ import (
 )
 
 func init() {
-	server := api.GetServeMux()
+	s := api.GetServeMux()
 
-	server.HandleFunc("/info", dsc.Info)
+	// Register static polymer assets
+	asset_repo := api.Dir{
+		http.Dir("html/bower_components/"),
+		http.Dir("html/custom_components/"),
+	}
+	s.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(asset_repo)))
 
-	server.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("html/bower_components/"))))
-	server.Handle("/", http.FileServer(http.Dir("html/")))
+	// Register static html resources
+	s.Handle("/css", http.FileServer(http.Dir("html/www/css/")))
+	s.Handle("/js", http.FileServer(http.Dir("html/www/js/")))
+	s.Handle("/", http.FileServer(http.Dir("html/www/")))
 
-	server.HandleFunc("/cluster/list", api.ClusterList)
-	server.HandleFunc("/cluster", api.ClusterCreate)
+	s.HandleFunc("/cluster/list", api.ClusterList)
+	s.HandleFunc("/cluster", api.ClusterCreate)
+
+	s.HandleFunc("/info", dsc.Info)
 }
 
 func RunAPIEndpoint(addr string) {

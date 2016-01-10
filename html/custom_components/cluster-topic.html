@@ -1,0 +1,39 @@
+<link rel="import" href="/assets/polymer/polymer.html">
+<link rel="import" href="/assets/iron-ajax/iron-ajax.html">
+
+<dom-module id="cluster-topic">
+<template>
+<style>
+.topic-wrapper {
+    margin: 0 auto;
+    width: 75%;
+    padding: 5px 15px;
+}
+.topic-wrapper > ::content h4 {
+    margin: 0;
+    font-family: sans-serif;
+    text-align: center;
+}
+.topic-wrapper > ::content a {
+    text-decoration: none;
+}
+</style>
+<iron-ajax auto url="/cluster/list" handle-as="json" on-response="listClusters"></iron-ajax>
+<div class="topic-wrapper">
+    <div class="list-wrapper">
+        <template is="dom-repeat" items="{{clusters}}">
+        <div><a href="/cluster/{{item}}">{{item}}</a></div>
+        </template>
+    </div>
+    <content></content>
+</div>
+</template>
+<script>
+Polymer({
+    is: "cluster-topic",
+    listClusters: function(e) {
+        debugger;
+    }
+});
+</script>
+</dom-module>
