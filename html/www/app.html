@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Swarm Manager Dashboard</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1">
+<link rel="import" href="/assets/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/assets/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="/assets/iron-image/iron-image.html">
+
+<link rel="import" href="/assets/paper-link.html">
+
+<style is="custom-style">
+body {
+    font-family: sans-serif;
+    background-color: rgba(238, 238, 238, 1);
+}
+paper-toolbar {
+    padding: 20px;
+}
+.paper-toolbar-more {
+    @apply(--layout-center);
+    @apply(--layout-end-justified);
+    @apply(--layout-flex);
+    @apply(--layout-horizontal);
+}
+</style>
+</head>
+<body class="fullbleed layout vertical">
+<paper-header-panel class="flex" mode="waterfall">
+    <paper-toolbar class="layout horizontal">
+        <iron-image src="/img/podd-logo-sm.png"></iron-image>
+        <div class="paper-toolbar-more">
+            <paper-link href="/" noink>Getting Started</paper-link>
+            <paper-link href="/" noink>About</paper-link>
+            <paper-link href="/" noink>Blog</paper-link>
+        </div>
+    </paper-toolbar>
+</paper-header-panel>
+</body>
+</html>

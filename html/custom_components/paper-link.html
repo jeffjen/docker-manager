@@ -1,0 +1,45 @@
+<link rel="import" href="/assets/polymer/polymer.html">
+<link rel="import" href="/assets/paper-button/paper-button.html">
+
+<dom-module id="paper-link">
+<template>
+<style>
+a {
+    text-decoration: none;
+}
+a:link {
+    color: var(--paper-link-color, black);
+}
+a:visited {
+    color: var(--paper-link-color, black);
+}
+a:hover {
+    color: var(--paper-link-color, black);
+}
+a:active {
+    color: var(--paper-link-color, black);
+}
+paper-button {
+    font-size: 18px;
+    background-color: var(--paper-link-background-color);
+}
+paper-button:hover {
+    background-color: var(--paper-link-background-hover-color, rgba(200, 200, 200, 1));
+}
+</style>
+<a href="{{href}}">
+    <paper-button id="b" raised=[[raised]]><content></content></paper-button>
+</a>
+</template>
+<script>
+Polymer({
+    is: "paper-link",
+    behaviors: [
+        Polymer.PaperButtonBehavior
+    ],
+    properties: {
+        raised: Boolean,
+    }
+});
+</script>
+</dom-module>
