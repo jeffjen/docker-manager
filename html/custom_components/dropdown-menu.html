@@ -1,0 +1,47 @@
+<link rel="import" href="/assets/polymer/polymer.html">
+<link rel="import" href="/assets/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/assets/paper-styles/default-theme.html">
+<link rel="import" href="/assets/paper-styles/color.html">
+
+<dom-module id="dropdown-menu">
+<template>
+<style>
+:host {
+    visibility: hidden;
+}
+.display-panel {
+    position: absolute;
+    top: 101px;
+    left: 15px;
+    width: 240px;
+    z-index: 1000;
+
+    background: var(--dropdown-menu-background-color, --primary-background-color);
+    color: var(--dropdown-menu-color, --primary-text-color);
+
+    padding: 8px 0;
+
+    @apply(--downdown-menu);
+}
+</style>
+<div class="display-panel">
+    <content></content>
+</div>
+</template>
+<script>
+Polymer({
+    is: "dropdown-menu",
+    open: function() {
+        this.style.visibility = "visible";
+        var hide = function(event) {
+            this.style.visibility = "hidden";
+            window.removeEventListener("click", hide, false);
+        };
+        // click anywhere causes menu to "close"
+        window.addEventListener("click", hide.bind(this));
+        // if window resize in anyway "close"
+        window.onresize = hide.bind(this);
+    }
+});
+</script>
+</dom-module>

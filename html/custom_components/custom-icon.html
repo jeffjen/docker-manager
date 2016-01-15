@@ -1,0 +1,20 @@
+<link rel="import" href="/assets/iron-icon/iron-icon.html">
+<link rel="import" href="/assets/custom-icons.html">
+
+<dom-module id="custom-icon">
+<template>
+<style>
+iron-icon {
+    --iron-icon-height: var(--custom-icon-height, 35px);
+    --iron-icon-width: var(--custom-icon-width, 35px);
+    opacity: var(--custom-icon-opacity);
+}
+</style>
+<iron-icon icon="podd:[[icon]]"></iron-icon>
+</template>
+<script>
+Polymer({
+    is: "custom-icon"
+});
+</script>
+</dom-module>

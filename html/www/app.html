@@ -4,11 +4,12 @@
 <title>Swarm Manager Dashboard</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<script src="/assets/webcomponentsjs/webcomponents-lite.min.js"></script>
 <link rel="import" href="/assets/iron-flex-layout/classes/iron-flex-layout.html">
 <link rel="import" href="/assets/paper-header-panel/paper-header-panel.html">
-<link rel="import" href="/assets/iron-image/iron-image.html">
 <link rel="import" href="/assets/paper-link.html">
+<link rel="import" href="/assets/custom-icon.html">
+<link rel="import" href="/assets/dropdown-menu.html">
 <style is="custom-style">
 body {
     font-family: sans-serif;
@@ -17,37 +18,119 @@ body {
 paper-toolbar {
     padding: 16px;
 }
-.paper-toolbar-pre {
+#logo {
+    margin-right: 10px;
+}
+#toolbar-pre {
     @apply(--layout-horizontal);
-    padding-left: 50px;
+    @apply(--layout-center);
+}
+#toolbar-pre custom-icon {
+    --custom-icon-height: 24px;
+    --custom-icon-width: 24px;
+}
+#drop-down {
+    display: none;
+}
+#drop-down-menu custom-icon {
+    --custom-icon-height: 24px;
+    --custom-icon-width: 24px;
 }
 @media only screen and (max-width: 850px) {
-    .paper-toolbar-pre {
+    #toolbar-pre {
         display: none;
     }
+    #drop-down {
+        display: block;
+        --custom-icon-opacity: 0.3;
+    }
+    #drop-down-menu paper-link {
+        --paper-link-button-width: 230px;
+        --paper-link-button-text-align: left;
+    }
 }
-.paper-toolbar-end {
+#toolbar-end {
     @apply(--layout-end-justified);
     @apply(--layout-flex);
     @apply(--layout-horizontal);
 }
-.paper-toolbar-end > paper-link {
-    --paper-link-background-color: white;
+#toolbar-end > paper-link {
+    --paper-link-button-background-color: white;
+}
+#toolbar-end custom-icon {
+    --custom-icon-height: 24px;
+    --custom-icon-width: 24px;
+}
+#summary {
+    height: 200px;
+}
+#summary-text {
+    width: 256px;
+    height: 100px;
+    background-color: #C7C7C7;
+    margin: 0 10px;
+}
+#summary-indicator {
+    width: 64px;
+    height: 100px;
+    background-color: #C7C7C7;
+    margin: 0 10px;
+}
+.info {
+    max-width: 512px;
+    min-width: 300px;
+    height: 500px;
+    margin: 10px 0;
+}
+#info-service {
+    background-color: #C7C7C7;
+}
+#info-cluster {
+    background-color: #C7C7C7;
+}
+#info-action {
+    background-color: #C7C7C7;
 }
 </style>
 </head>
 <body class="fullbleed layout vertical">
 <paper-header-panel class="flex" mode="waterfall">
     <paper-toolbar class="layout horizontal center">
-        <a href="/"><iron-image src="/img/podd-logo-sm.png"></iron-image></a>
-        <div class="paper-toolbar-pre">
-            <paper-link href="/" noink>service</paper-link>
-            <paper-link href="/" noink><i class="fa fa-cloud"></i> cluster</paper-link>
+        <a href="/"><img id="logo" src="/img/podd-logo-sm.png"></img></a>
+        <custom-icon id="drop-down" icon="arrow-drop-down"></custom-icon>
+        <div id="toolbar-pre">
+            <paper-link href="/" noink><custom-icon icon="service"></custom-icon> service</paper-link>
+            <paper-link href="/" noink><custom-icon icon="cluster"></custom-icon> cluster</paper-link>
         </div>
-        <div class="paper-toolbar-end">
-            <paper-link href="/" raised noink><i class="fa fa-github"></i> github</paper-link>
+        <div id="toolbar-end">
+            <paper-link href="https://github.com/jeffjen/docker-manager" raised noink>
+                <custom-icon icon="github"></custom-icon> github
+            </paper-link>
         </div>
+        <dropdown-menu id="drop-down-menu">
+            <paper-link href="/" noink><custom-icon icon="service"></custom-icon> service</paper-link>
+            <paper-link href="/" noink><custom-icon icon="cluster"></custom-icon> cluster</paper-link>
+        </dropdown-menu>
     </paper-toolbar>
+    <div id="summary" class="layout horizontal center-justified center">
+        <div id="summary-text"></div>
+        <div id="summary-indicator"></div>
+    </div>
+    <div id="info" class="layout horizontal around-justified wrap">
+        <div id="info-service" class="info flex"></div>
+        <div id="info-cluster" class="info flex"></div>
+        <div id="info-action" class="info flex"></div>
+    </div>
 </paper-header-panel>
 </body>
+<script>
+// capture drop down behavior
+var dropdownToggle = document.querySelector("#drop-down"),
+    dropdownMenu = document.querySelector("#drop-down-menu");
+
+dropdownToggle && dropdownToggle.addEventListener("click", function(e) {
+    dropdownMenu.open();
+    e.stopPropagation();
+});
+</script>
 </html>

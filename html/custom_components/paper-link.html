@@ -21,11 +21,14 @@ a:active {
 }
 paper-button {
     font-size: 18px;
-    background-color: var(--paper-link-background-color);
+    background-color: var(--paper-link-button-background-color);
     text-transform: capitalize;
+
+    width: var(--paper-link-button-width);
+    text-align: var(--paper-link-button-text-align, center);
 }
 paper-button:hover {
-    background-color: var(--paper-link-background-hover-color, rgba(200, 200, 200, 1));
+    background-color: var(--paper-link-button-background-hover-color, rgba(200, 200, 200, 1));
 }
 </style>
 <a href="{{href}}">
