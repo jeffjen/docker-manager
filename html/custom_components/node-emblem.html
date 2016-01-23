@@ -1,0 +1,87 @@
+<link rel="import" href="/assets/polymer/polymer.html">
+<link rel="import" href="/assets/paper-material/paper-material.html">
+<link rel="import" href="/assets/paper-ripple/paper-ripple.html">
+
+<dom-module id="node-emblem">
+<template>
+<style include="paper-material">
+:host {
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    width: 128px;
+    min-height: 128px;
+    background-color: var(--node-emblem-background-color);
+    border-top: var(--node-emblem-bar, 3px solid teal);
+}
+.emblem {
+    font-family: sans-serif;
+}
+.emblem > .number {
+    font-size: 1.5em;
+}
+.emblem > .state {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+.emblem > .header {
+    font-size: 2.5em;
+    font-weight: bold;
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 5px;
+}
+.emblem > .full {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+paper-ripple {
+    color: var(--node-emblem-ink-color);
+}
+:host ::content {
+    padding: 16px;
+    position: relative;
+}
+</style>
+<div class="emblem" on-click="_move">
+    <div class="number">{{number}}</div>
+    <div class="state">{{state}}</div>
+    <div class="header">{{_computeHeader(text)}}</div>
+    <div class="full">{{text}}</div>
+</div>
+<content></content>
+<paper-ripple recenters></paper-ripple>
+</template>
+<script>
+Polymer({
+    is: "node-emblem",
+    properties: {
+        elevation: { type: Number, value: 1, reflectToAttribute: true },
+        state: { type: String, value: "ok" },
+        tint: { type: String, value: "transparent" },
+        number: Number,
+        header: String,
+        text: String,
+        url: String
+    },
+    ready: function() {
+        this.customStyle["--node-emblem-background-color"] = this.tint;
+    },
+    _computeHeader: function(text, header) {
+        if (header) {
+            return header;
+        } else {
+            return text.substring(0, 2);
+        }
+    },
+    _move: function(e) {
+        window.location = this.url;
+    },
+});
+</script>
+</dom-module>

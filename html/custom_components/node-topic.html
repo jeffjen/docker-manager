@@ -1,14 +1,14 @@
 <link rel="import" href="/assets/polymer/polymer.html">
 <link rel="import" href="/assets/iron-ajax/iron-ajax.html">
-<link rel="import" href="/assets/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/assets/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/assets/node-emblem.html">
 
 <dom-module id="node-topic">
 <template>
 <style>
 :host {
-    height: 250px;
+    min-height: 256px;
     margin: 10px 15px;
-    padding: 16px;
     background-color: #C7C7C7;
 }
 
@@ -17,8 +17,6 @@
 }
 
 .topic-wrapper {
-    margin: 0 auto;
-    width: 75%;
     padding: 5px 15px;
 }
 .topic-wrapper > ::content h4 {
@@ -29,12 +27,9 @@
 .topic-wrapper > ::content a {
     text-decoration: none;
 }
-.list-wrapper {
-    padding: 5px 10px;
-}
-.list-wrapper a {
-    font-size: 14px;
-    margin: 2px;
+
+node-emblem {
+    margin: 10px 10px;
 }
 </style>
 <iron-ajax auto url="{{type}}/list" handle-as="json" on-response="handle"></iron-ajax>
@@ -42,9 +37,9 @@
     <div class="content-wrapper">
         <content select="#desc"></content>
     </div>
-    <div class="list-wrapper">
+    <div class="list-wrapper layout horizontal wrap">
         <template is="dom-repeat" items="{{nodes}}">
-        <a href="/{{type}}/{{item.name}}">{{item.name}}</a>
+            <node-emblem url="{{type}}/{{item.name}}" number={{item.nodes}} text="{{item.name}}"></node-emblem>
         </template>
     </div>
 </div>
