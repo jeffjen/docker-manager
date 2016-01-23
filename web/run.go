@@ -1,8 +1,8 @@
 package web
 
 import (
-	api "github.com/jeffjen/docker-manager/web/api"
 	dsc "github.com/jeffjen/go-discovery/info"
+	api "github.com/jeffjen/podd/web/api"
 
 	log "github.com/Sirupsen/logrus"
 

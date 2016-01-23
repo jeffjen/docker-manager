@@ -1,9 +1,9 @@
 package main
 
 import (
-	web "github.com/jeffjen/docker-manager/web"
 	disc "github.com/jeffjen/go-discovery"
 	dcli "github.com/jeffjen/go-discovery/cli"
+	web "github.com/jeffjen/podd/web"
 
 	log "github.com/Sirupsen/logrus"
 	cli "github.com/codegangsta/cli"
@@ -17,7 +17,7 @@ const (
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "docker-manger"
+	app.Name = "podd"
 	app.Usage = "Facilitate management of service provision by docker swarm"
 	app.Authors = []cli.Author{
 		cli.Author{"Yi-Hung Jen", "yihungjen@gmail.com"},

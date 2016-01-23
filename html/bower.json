@@ -1,10 +1,10 @@
 {
-  "name": "docker-manager",
-  "homepage": "https://github.com/jeffjen/docker-manager",
+  "name": "podd",
+  "homepage": "https://github.com/jeffjen/podd",
   "authors": [
     "Jeffrey Jen <yihungjen@gmail.com>"
   ],
-  "description": "docker-manager frontend for service and cluster management",
+  "description": "podd frontend for service and cluster management",
   "main": "",
   "moduleType": [],
   "license": "MIT",
@@ -23,6 +23,7 @@
     "paper-header-panel": "PolymerElements/paper-header-panel#~1.1.2",
     "paper-toolbar": "PolymerElements/paper-toolbar#~1.1.2",
     "paper-button": "PolymerElements/paper-button#~1.0.11",
-    "iron-icons": "PolymerElements/iron-icons#~1.1.1",
+    "iron-icon": "PolymerElements/iron-icon#~1.0.7",
+    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#~1.0.9"
   }
 }
