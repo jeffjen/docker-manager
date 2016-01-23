@@ -10,16 +10,11 @@
 <link rel="import" href="/assets/paper-link.html">
 <link rel="import" href="/assets/custom-icon.html">
 <link rel="import" href="/assets/dropdown-menu.html">
+<link rel="import" href="/assets/node-topic.html">
 <style is="custom-style">
 body {
     font-family: sans-serif;
     background-color: rgba(238, 238, 238, 1);
-}
-paper-toolbar {
-    padding: 16px;
-}
-#logo {
-    margin-right: 10px;
 }
 #toolbar-pre {
     @apply(--layout-horizontal);
@@ -61,42 +56,12 @@ paper-toolbar {
     --custom-icon-height: 24px;
     --custom-icon-width: 24px;
 }
-#summary {
-    height: 200px;
-}
-#summary-text {
-    width: 256px;
-    height: 100px;
-    background-color: #C7C7C7;
-    margin: 0 10px;
-}
-#summary-indicator {
-    width: 64px;
-    height: 100px;
-    background-color: #C7C7C7;
-    margin: 0 10px;
-}
-.info {
-    max-width: 512px;
-    min-width: 300px;
-    height: 500px;
-    margin: 10px 0;
-}
-#info-service {
-    background-color: #C7C7C7;
-}
-#info-cluster {
-    background-color: #C7C7C7;
-}
-#info-action {
-    background-color: #C7C7C7;
-}
 </style>
 </head>
 <body class="fullbleed layout vertical">
 <paper-header-panel class="flex" mode="waterfall">
-    <paper-toolbar class="layout horizontal center">
-        <a href="/"><img id="logo" src="/img/podd-logo-sm.png"></img></a>
+    <paper-toolbar class="layout horizontal center" style="padding: 16px;">
+        <a href="/"><img id="logo" src="/img/podd-logo-sm.png" style="margin-right: 10px;"></img></a>
         <custom-icon id="drop-down" icon="arrow-drop-down"></custom-icon>
         <div id="toolbar-pre">
             <paper-link href="/" noink><custom-icon icon="service"></custom-icon> service</paper-link>
@@ -112,14 +77,13 @@ paper-toolbar {
             <paper-link href="/" noink><custom-icon icon="cluster"></custom-icon> cluster</paper-link>
         </dropdown-menu>
     </paper-toolbar>
-    <div id="summary" class="layout horizontal center-justified center">
-        <div id="summary-text"></div>
-        <div id="summary-indicator"></div>
-    </div>
-    <div id="info" class="layout horizontal around-justified wrap">
-        <div id="info-service" class="info flex"></div>
-        <div id="info-cluster" class="info flex"></div>
-        <div id="info-action" class="info flex"></div>
+    <div class="layout vertical">
+        <node-topic id="service" type="service">
+            <div id="desc">Service Roster</div>
+        </node-topic>
+        <node-topic id="cluster" type="cluster">
+            <div id="desc">Cluster Roster</div>
+        </node-topic>
     </div>
 </paper-header-panel>
 </body>

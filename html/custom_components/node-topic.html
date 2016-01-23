@@ -1,0 +1,69 @@
+<link rel="import" href="/assets/polymer/polymer.html">
+<link rel="import" href="/assets/iron-ajax/iron-ajax.html">
+<link rel="import" href="/assets/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="node-topic">
+<template>
+<style>
+:host {
+    height: 250px;
+    margin: 10px 15px;
+    padding: 16px;
+    background-color: #C7C7C7;
+}
+
+.content-wrapper > ::content #desc {
+    text-align: center;
+}
+
+.topic-wrapper {
+    margin: 0 auto;
+    width: 75%;
+    padding: 5px 15px;
+}
+.topic-wrapper > ::content h4 {
+    margin: 0;
+    font-family: sans-serif;
+    text-align: center;
+}
+.topic-wrapper > ::content a {
+    text-decoration: none;
+}
+.list-wrapper {
+    padding: 5px 10px;
+}
+.list-wrapper a {
+    font-size: 14px;
+    margin: 2px;
+}
+</style>
+<iron-ajax auto url="{{type}}/list" handle-as="json" on-response="handle"></iron-ajax>
+<div class="topic-wrapper">
+    <div class="content-wrapper">
+        <content select="#desc"></content>
+    </div>
+    <div class="list-wrapper">
+        <template is="dom-repeat" items="{{nodes}}">
+        <a href="/{{type}}/{{item.name}}">{{item.name}}</a>
+        </template>
+    </div>
+</div>
+</template>
+<script>
+Polymer({
+    is: "node-topic",
+    properties: {
+        type: String
+    },
+    ready: function() {
+        this.nodes = [];
+    },
+    handle: function(e) {
+        var items = e.detail.response;
+        for (var idx = 0; idx < items.Size; idx++) {
+            this.push("nodes", items.Nodes[idx]);
+        }
+    }
+});
+</script>
+</dom-module>
