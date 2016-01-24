@@ -1,0 +1,57 @@
+<link rel="import" href="/assets/polymer/polymer.html">
+<link rel="import" href="/assets/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="/assets/iron-icons/iron-icons.html">
+<link rel="import" href="/assets/paper-fab/paper-fab.html">
+
+<dom-module id="node-action">
+<template>
+<style>
+:host {
+    position: fixed;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+}
+div.contianer {
+    padding: 16px;
+}
+div.contianer paper-fab {
+    margin: 5px 0;
+    --paper-fab-background: var(--paper-light-blue-500);
+    --paper-fab-keyboard-focus-background: var(--paper-light-blue-500);
+}
+.contianer > ::content .action {
+    margin: 5px 0;
+    width: 56px;
+    height: 56px;
+}
+</style>
+<div class="contianer">
+    <content select=".action"></content>
+    <paper-fab icon="add" noink on-click="show"></paper-fab>
+</div>
+</template>
+<script>
+Polymer({
+    is: "node-action",
+    properties: {
+        actionVisibile: {
+            type: String,
+            value: "none",
+            reflectToAttribute: true,
+            observer: "_show",
+        }
+    },
+    show: function(e) {
+        this.actionVisibile = (this.actionVisibile === "none") ? "block" : "none";
+    },
+    _show: function(n, o) {
+        var content = this.getContentChildren();
+        for (var idx = 0; idx < content.length; idx++) {
+            var action = content[idx];
+            action.style.display = this.actionVisibile;
+        }
+    }
+});
+</script>
+</dom-module>
