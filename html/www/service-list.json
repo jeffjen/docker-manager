@@ -1,0 +1,13 @@
+{
+    "Size": 2,
+    "Nodes": [
+        {
+            "name": "video-transcode-admin",
+            "nodes": 20
+        },
+        {
+            "name": "livestream",
+            "nodes": 50
+        }
+    ]
+}

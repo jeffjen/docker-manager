@@ -24,8 +24,14 @@ func init() {
 	s.Handle("/js", http.FileServer(http.Dir("html/www/js/")))
 	s.Handle("/", http.FileServer(http.Dir("html/www/")))
 
-	s.HandleFunc("/cluster/list", api.ClusterList)
-	s.HandleFunc("/cluster", api.ClusterCreate)
+	// API for cluster
+	s.HandleFunc("/cluster/list", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "html/www/cluster-list.json")
+	})
+	// API for service
+	s.HandleFunc("/service/list", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "html/www/service-list.json")
+	})
 
 	s.HandleFunc("/info", dsc.Info)
 }

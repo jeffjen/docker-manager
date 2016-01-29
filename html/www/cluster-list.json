@@ -1,0 +1,21 @@
+{
+    "Size": 4,
+    "Nodes": [
+        {
+            "name": "redis-brick",
+            "nodes": 10
+        },
+        {
+            "name": "mongodb-brick",
+            "nodes": 10
+        },
+        {
+            "name": "video-transcode-admin",
+            "nodes": 10
+        },
+        {
+            "name": "livestream",
+            "nodes": 40
+        }
+    ]
+}
