@@ -12,6 +12,11 @@ var (
 			Name:  "addr",
 			Usage: "API endpoint for admin",
 		},
+		cli.StringFlag{
+			Name:  "provider",
+			Usage: "Provisioning provider",
+			Value: "AWS",
+		},
 	}
 )
 

@@ -1,106 +1,107 @@
 package api
 
 import (
-	disc "github.com/jeffjen/go-discovery"
+	prov "github.com/jeffjen/podd/provider"
 
 	_ "github.com/Sirupsen/logrus"
-	etcd "github.com/coreos/etcd/client"
-	ctx "golang.org/x/net/context"
+	"github.com/gin-gonic/gin"
 
-	"encoding/json"
 	"net/http"
-	"path"
-	"strconv"
-	"time"
 )
 
-const (
-	DefaultRootPath = "/"
+func ClusterList(c *gin.Context) {
+	type clusterOutput struct {
+		Name   string `json:"name"`
+		Min    int64  `json:"node_min"`
+		Max    int64  `json:"node_max"`
+		Count  int64  `json:"node_count"`
+		Online int64  `json:"node_online"`
+	}
 
-	DefaultListClusterSize = 10
-)
+	clusters, stop := AutoScaling.ListCluster()
+	defer close(stop)
 
-type Clusters struct {
-	Root  string
-	Size  int
-	Nodes []string
+	output := struct {
+		Size  int64
+		Nodes []*clusterOutput
+	}{
+		Size:  0,
+		Nodes: make([]*clusterOutput, 0),
+	}
+
+	for one := range clusters {
+		name, min, max, count := one.Stats()
+		output.Nodes = append(output.Nodes, &clusterOutput{
+			Name:   name,
+			Min:    min,
+			Max:    max,
+			Count:  count,
+			Online: one.Online(),
+		})
+		output.Size += 1
+	}
+
+	c.JSON(http.StatusOK, output)
 }
 
-func checkCluster(c *Clusters, n *etcd.Node) {
-	if !n.Dir {
-		return // skipping because a cluster root is always a dir
-	}
-	for _, node := range n.Nodes { // traverse Depth First
-		if c.Size <= len(c.Nodes) {
-			return // capacity reached for this query
-		}
-		if node.Dir {
-			if path.Base(node.Key) == "docker" {
-				c.Nodes = append(c.Nodes, n.Key[1:len(n.Key)])
-			} else {
-				checkCluster(c, node)
-			}
-		}
-	}
-}
-
-func ClusterList(w http.ResponseWriter, r *http.Request) {
-	if err := common("GET", r); err != nil {
-		http.Error(w, err.Error(), 400)
+func ClusterUpdate(c *gin.Context) {
+	var opts prov.ScalePolicy
+	if err := c.Bind(&opts); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	// We are sending json data
-	w.Header().Add("Content-Type", "application/json")
-
-	var RootPath = DefaultRootPath
-	if root := r.Form.Get("root"); root != "" {
-		RootPath = root
-	}
-
-	var ClusterSize = DefaultListClusterSize
-	if projSizeStr := r.Form.Get("size"); projSizeStr != "" {
-		projSize, err := strconv.ParseInt(projSizeStr, 10, 0)
-		if err == nil {
-			ClusterSize = int(projSize)
-		}
-	}
-	var ClusterNodes = &Clusters{
-		Root:  RootPath,
-		Size:  ClusterSize,
-		Nodes: make([]string, 0, ClusterSize),
-	}
-
-	kAPI, _ := disc.NewKeysAPI(etcd.Config{
-		Endpoints: disc.Endpoints(),
-	})
-
-	work, abort := ctx.WithTimeout(ctx.Background(), 3*time.Second)
-	defer abort()
-
-	resp, err := kAPI.Get(work, RootPath, &etcd.GetOptions{
-		Recursive: true,
-	})
-	if err != nil {
-		json.NewEncoder(w).Encode(ClusterNodes)
+	if !opts.VerfiyScaleConstraint() {
+		c.AbortWithStatus(http.StatusExpectationFailed)
 		return
 	}
 
-	// Go traverse the discovery tree
-	for _, node := range resp.Node.Nodes {
-		checkCluster(ClusterNodes, node)
+	// Check that the cluster is registered
+	cluster := AutoScaling.GetCluster(c.Param("name"))
+	if cluster == nil {
+		c.AbortWithStatus(http.StatusExpectationFailed)
+		return
 	}
-	ClusterNodes.Size = len(ClusterNodes.Nodes)
 
-	json.NewEncoder(w).Encode(ClusterNodes)
-	return
+	// Request provider to update cluster size
+	if err := cluster.Configure(opts.Min, opts.Max, opts.Count); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	c.String(http.StatusOK, "done")
 }
 
-func ClusterCreate(w http.ResponseWriter, r *http.Request) {
-	if err := common("POST", r); err != nil {
-		http.Error(w, err.Error(), 400)
+func ClusterCreate(c *gin.Context) {
+	var cOpts prov.ClusterOptions
+	if err := c.Bind(&cOpts); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
-	http.Error(w, ErrNotImplemented.Error(), 403)
-	return
+
+	// Check that the cluster is not already registered
+	cOpts.Name = c.Param("name")
+	if AutoScaling.GetCluster(cOpts.Name) != nil {
+		c.AbortWithStatus(http.StatusExpectationFailed)
+		return
+	}
+
+	// Verify that the request for node scaling is valid
+	if !cOpts.VerfiyScaleConstraint() {
+		c.AbortWithStatus(http.StatusExpectationFailed)
+		return
+	}
+
+	// If Root (being the cluster root identifier) is not given, use Default
+	if cOpts.Root == "" {
+		cOpts.Root = prov.ClusterGroup
+	}
+
+	// Request provider to register a new cluster
+	if err := AutoScaling.Register(cOpts); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	c.String(http.StatusOK, "done")
 }
