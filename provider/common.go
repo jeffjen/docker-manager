@@ -19,7 +19,7 @@ var (
 		"AWS": newAWS,
 	}
 
-	cloudInitTmpl = template.Must(template.New("cloud-init").ParseFiles("cloud-init/init.template"))
+	cloudInitTmpl = template.Must(template.ParseFiles("cloud-init/init"))
 )
 
 func New(name string) AutoScaling {
