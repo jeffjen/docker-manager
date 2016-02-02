@@ -32,8 +32,8 @@ type ClusterOptions struct {
 	Name string `form:"name" json:"name"`
 
 	// Min, Max of cluster size and current size
-	Min   int64 `form:"node_min" json:"node_min" binding:"required"`
-	Max   int64 `form:"node_max" json:"node_max" binding:"required"`
+	Min   int64 `form:"node_min" json:"node_min"`
+	Max   int64 `form:"node_max" json:"node_max"`
 	Count int64 `form:"node_count" json:"node_count"`
 
 	// Instance type by provider
@@ -60,8 +60,8 @@ func (c ClusterOptions) VerfiyScaleConstraint() bool {
 }
 
 type ScalePolicy struct {
-	Min   int64 `form:"node_min" json:"node_min" binding:"required"`
-	Max   int64 `form:"node_max" json:"node_max" binding:"required"`
+	Min   int64 `form:"node_min" json:"node_min"`
+	Max   int64 `form:"node_max" json:"node_max"`
 	Count int64 `form:"node_count" json:"node_count"`
 }
 
