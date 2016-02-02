@@ -1,0 +1,11 @@
+#!/bin/bash
+
+curl -sSL -O https://raw.githubusercontent.com/jeffjen/aws-devops/master/bootstrap.sh
+chmod +x bootstrap.sh
+
+./bootstrap.sh --reboot --dockeruser ubuntu --swap "{{.Swapsize}}" --discovery "{{.Discovery}}" \
+    --agent-notify-uri "{{.WebHook}}" \
+    --agent-notify-channel "{{.Channel}}" \
+    --cluster "{{.Root}}/{{.Name}}" \
+    --ambassador "latest" \
+    --agent "latest"

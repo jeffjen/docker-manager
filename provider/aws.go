@@ -21,6 +21,8 @@ var (
 
 	AWS_EC2_INSTANCE_SSH_KEY = os.Getenv("AWS_EC2_INSTANCE_SSH_KEY")
 
+	AWS_AUTOSCALING_GROUP_DISCOVERY = os.Getenv("AWS_AUTOSCALING_GROUP_DISCOVERY")
+
 	AWS_AUTOSCALING_GROUP_VPC_SECURITY_GROUPS = os.Getenv("AWS_AUTOSCALING_GROUP_VPC_SECURITY_GROUPS")
 
 	AWS_AUTOSCALING_GROUP_VPC_FUNCTION = os.Getenv("AWS_AUTOSCALING_GROUP_VPC_FUNCTION")
@@ -154,6 +156,9 @@ type service struct {
 
 func (svc *service) Register(opts ClusterOptions) error {
 	var cOpts = &opts
+	if cOpts.Discovery == "" {
+		cOpts.Discovery = AWS_AUTOSCALING_GROUP_DISCOVERY
+	}
 	_, err := svc.auto.CreateLaunchConfiguration(prepareLaunchConfig(cOpts))
 	if err != nil {
 		return err

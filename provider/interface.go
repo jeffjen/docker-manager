@@ -25,6 +25,9 @@ type ClusterOptions struct {
 	// Cluster root identifier
 	Root string `form:"group" json:"group"`
 
+	// Cluster discovery provider
+	Discovery string `form:"discovery" json:"discovery"`
+
 	// Name of the cluster
 	Name string `form:"name" json:"name"`
 

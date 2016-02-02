@@ -5,22 +5,6 @@ import (
 )
 
 const (
-	UserData = `#!/bin/bash
-
-curl -sSL -O https://raw.githubusercontent.com/jeffjen/aws-devops/master/bootstrap.sh
-chmod +x bootstrap.sh
-
-INSTANCE_OPTS="--reboot --dockeruser ubuntu {{if .Swapsize}}--swap {{.Swapsize}}{{end}}"
-
-NOTIFICATION_OPTS="{{if .WebHook}}--agent-notify-uri {{.WebHook}} --agent-notify-channel {{.Channel}}{{end}}"
-
-AGENT_OPTS="--discovery etcd://172.99.0.154:2379 --cluster {{.Root}}/{{.Name}} ${NOTIFICATION_OPTS}"
-
-./bootstrap.sh ${INSTANCE_OPTS} ${AGENT_OPTS}
-`
-)
-
-const (
 	ClusterGroup = "/cluster"
 
 	// spread the srevice to as much instances as possible
@@ -35,7 +19,7 @@ var (
 		"AWS": newAWS,
 	}
 
-	cloudInitTmpl = template.Must(template.New("cloud-init").Parse(UserData))
+	cloudInitTmpl = template.Must(template.New("cloud-init").ParseFiles("cloud-init/init.template"))
 )
 
 func New(name string) AutoScaling {
