@@ -11,7 +11,6 @@ import (
 
 	"bytes"
 	"encoding/base64"
-	"fmt"
 	"os"
 	"path"
 )
@@ -32,9 +31,7 @@ var (
 
 func prepareLaunchConfig(cOpts *ClusterOptions) *autoscaling.CreateLaunchConfigurationInput {
 	var buf = new(bytes.Buffer)
-
 	cloudInitTmpl.Execute(buf, cOpts)
-
 	return &autoscaling.CreateLaunchConfigurationInput{
 		LaunchConfigurationName:  aws.String(cOpts.Name),
 		AssociatePublicIpAddress: aws.Bool(cOpts.PublicIP),
@@ -196,29 +193,28 @@ func newAWS() AutoScaling {
 	auto := autoscaling.New(session.New())
 	svc := &service{make(map[string]Cluster), auto, dsc}
 	go func() {
-		root, err := svc.kAPI.Get(ctx.Background(), ClusterGroup, nil)
-		if err != nil {
-			return // TODO: I should continue to track nodes joining
-		}
-		for _, node := range root.Node.Nodes {
-			cOpts := &ClusterOptions{
-				Root: ClusterGroup,
-				Name: path.Base(node.Key),
-			}
-			params := &autoscaling.DescribeAutoScalingGroupsInput{
-				AutoScalingGroupNames: []*string{aws.String(cOpts.Name)},
-				MaxRecords:            aws.Int64(1),
-			}
+		params := &autoscaling.DescribeAutoScalingGroupsInput{}
+		for yes := true; yes; {
 			resp, err := svc.auto.DescribeAutoScalingGroups(params)
-			if err == nil {
-				group := resp.AutoScalingGroups[0]
-				cOpts.Min = *group.MinSize
-				cOpts.Max = *group.MaxSize
-				cOpts.Count = int64(len(group.Instances))
-				svc.cluster[cOpts.Name] = &cluster{svc.auto, svc.kAPI, cOpts}
-			} else {
-				fmt.Println(err.Error())
+			if err != nil {
+				panic(err) // FIXME: don't give up, stay determined!
 			}
+			for _, group := range resp.AutoScalingGroups {
+				var clusterIden = path.Join(ClusterGroup, *group.AutoScalingGroupName)
+				if _, err := svc.kAPI.Get(ctx.Background(), clusterIden, nil); err == nil {
+					cOpts := &ClusterOptions{
+						Root:  ClusterGroup,
+						Name:  *group.AutoScalingGroupName,
+						Max:   *group.MaxSize,
+						Min:   *group.MinSize,
+						Count: int64(len(group.Instances)),
+						// TODO: setup for more info
+					}
+					svc.cluster[cOpts.Name] = &cluster{svc.auto, svc.kAPI, cOpts}
+				}
+			}
+			params.NextToken = resp.NextToken
+			yes = (resp.NextToken != nil && *resp.NextToken != "")
 		}
 	}()
 	return svc
